@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.effective.android.anchors.task.lock.LockableAnchor;
 import com.effective.android.sample.R;
 import com.effective.android.sample.data.JDatas;
@@ -76,7 +78,7 @@ public class JMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("MainActivity", "Demo1 - testUserChoose");
                 final List<LockableAnchor> lockableAnchors = new JDatas().startForTestLockableAnchor();
-                for(final LockableAnchor lockableAnchor : lockableAnchors){
+                for (final LockableAnchor lockableAnchor : lockableAnchors) {
                     lockableAnchor.setLockListener(new LockableAnchor.LockListener() {
                         @Override
                         public void lockUp() {

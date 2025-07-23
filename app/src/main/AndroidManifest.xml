@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.effective.android.sample">
+    package="com.effective.android.sample">
 
-<!--  java 代码 -->
-<!--    <application-->
-<!--        android:name=".JSampleApplication"-->
-<!--        android:allowBackup="true"-->
-<!--        android:icon="@drawable/logo"-->
-<!--        android:label="@string/app_name"-->
-<!--        android:roundIcon="@drawable/logo"-->
-<!--        android:supportsRtl="true"-->
-<!--        android:theme="@style/AppTheme">-->
-<!--        <activity android:name=".view.JMainActivity">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+    <!--  java 代码 -->
+    <!--    <application-->
+    <!--        android:name=".JSampleApplication"-->
+    <!--        android:allowBackup="true"-->
+    <!--        android:icon="@drawable/logo"-->
+    <!--        android:label="@string/app_name"-->
+    <!--        android:roundIcon="@drawable/logo"-->
+    <!--        android:supportsRtl="true"-->
+    <!--        android:theme="@style/AppTheme">-->
+    <!--        <activity android:name=".view.JMainActivity">-->
+    <!--            <intent-filter>-->
+    <!--                <action android:name="android.intent.action.MAIN" />-->
+    <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+    <!--            </intent-filter>-->
+    <!--        </activity>-->
 
 
-<!--        <activity-->
-<!--            android:name=".view.PrivateProcessActivity"-->
-<!--            android:process=":remote">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+    <!--        <activity-->
+    <!--            android:name=".view.PrivateProcessActivity"-->
+    <!--            android:process=":remote">-->
+    <!--            <intent-filter>-->
+    <!--                <action android:name="android.intent.action.VIEW" />-->
+    <!--            </intent-filter>-->
+    <!--        </activity>-->
 
-<!--        <activity-->
-<!--            android:name=".view.PublicProcessActivity"-->
-<!--            android:process="com.hotsun.test">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-<!--    </application>-->
+    <!--        <activity-->
+    <!--            android:name=".view.PublicProcessActivity"-->
+    <!--            android:process="com.hotsun.test">-->
+    <!--            <intent-filter>-->
+    <!--                <action android:name="android.intent.action.VIEW" />-->
+    <!--            </intent-filter>-->
+    <!--        </activity>-->
+    <!--    </application>-->
 
-<!--  kotlin 代码-->
+    <!--  kotlin 代码-->
     <application
         android:name=".SampleApplication"
         android:allowBackup="true"
@@ -45,7 +45,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.MainActivity">
+        <activity
+            android:name=".view.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -55,6 +57,7 @@
 
         <activity
             android:name=".view.PrivateProcessActivity"
+            android:exported="true"
             android:process=":remote">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -63,11 +66,11 @@
 
         <activity
             android:name=".view.PublicProcessActivity"
+            android:exported="true"
             android:process="com.hotsun.test">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

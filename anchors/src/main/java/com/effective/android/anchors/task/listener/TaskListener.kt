@@ -1,6 +1,5 @@
 package com.effective.android.anchors.task.listener
 
-import android.view.View
 import com.effective.android.anchors.task.Task
 
 interface TaskListener {

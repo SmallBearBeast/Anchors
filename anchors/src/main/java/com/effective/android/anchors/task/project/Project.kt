@@ -31,6 +31,7 @@ class Project private constructor(id: String) : Task(id) {
     }
 
     public override fun run(name: String) { //不需要处理
+
     }
 
     override fun release() {

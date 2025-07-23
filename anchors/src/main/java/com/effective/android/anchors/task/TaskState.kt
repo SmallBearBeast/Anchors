@@ -1,8 +1,8 @@
 package com.effective.android.anchors.task
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 
-@kotlin.annotation.Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.SOURCE)
 @IntDef(TaskState.IDLE, TaskState.RUNNING, TaskState.FINISHED, TaskState.START, TaskState.RELEASE)
 annotation class TaskState {
     companion object {

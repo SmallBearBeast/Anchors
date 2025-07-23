@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.effective.android.sample.data.JDatas;
 import com.effective.android.sample.util.ProcessUtils;
-import com.squareup.leakcanary.LeakCanary;
 
 /**
  * java demo
@@ -18,10 +17,6 @@ public class JSampleApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
         Log.d(TAG, "SampleApplication#onCreate process Id is " + ProcessUtils.getProcessId());
         Log.d(TAG, "SampleApplication#onCreate process Name is " + ProcessUtils.getProcessName());
         Log.d(TAG, "SampleApplication#onCreate - start");

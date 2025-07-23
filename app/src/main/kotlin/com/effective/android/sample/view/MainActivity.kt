@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.effective.android.sample.R
 import com.effective.android.sample.data.Datas
 import com.effective.android.sample.util.ProcessUtils
