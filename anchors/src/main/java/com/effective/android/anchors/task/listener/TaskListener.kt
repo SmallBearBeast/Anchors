@@ -2,6 +2,11 @@ package com.effective.android.anchors.task.listener
 
 import com.effective.android.anchors.task.Task
 
+private typealias OnStart = (task: Task) -> Unit
+private typealias OnRunning = (task: Task) -> Unit
+private typealias OnFinish = (task: Task) -> Unit
+private typealias OnRelease = (task: Task) -> Unit
+
 interface TaskListener {
     fun onStart(task: Task)
     fun onRunning(task: Task)
@@ -9,17 +14,12 @@ interface TaskListener {
     fun onRelease(task: Task)
 }
 
-private typealias onStart = (task: Task) -> Unit
-private typealias onRunning = (task: Task) -> Unit
-private typealias OnFinish = (task: Task) -> Unit
-private typealias onRelease = (task: Task) -> Unit
-
 class TaskListenerBuilder : TaskListener {
 
-    private var onStart: onStart? = null
-    private var onRunning: onRunning? = null
+    private var onStart: OnStart? = null
+    private var onRunning: OnRunning? = null
     private var onFinish: OnFinish? = null
-    private var onRelease: onRelease? = null
+    private var onRelease: OnRelease? = null
 
     override fun onStart(task: Task) {
         onStart?.invoke(task)
@@ -37,12 +37,11 @@ class TaskListenerBuilder : TaskListener {
         onRelease?.invoke(task)
     }
 
-
-    fun onStart(onStart: onStart) {
+    fun onStart(onStart: OnStart) {
         this.onStart = onStart
     }
 
-    fun onRunning(onRunning: onRunning) {
+    fun onRunning(onRunning: OnRunning) {
         this.onRunning = onRunning
     }
 
@@ -50,7 +49,7 @@ class TaskListenerBuilder : TaskListener {
         this.onFinish = onFinish
     }
 
-    fun onRelease(onRelease: onRelease) {
+    fun onRelease(onRelease: OnRelease) {
         this.onRelease = onRelease
     }
 }

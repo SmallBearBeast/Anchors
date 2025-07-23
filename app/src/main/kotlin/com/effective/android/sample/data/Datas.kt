@@ -6,6 +6,72 @@ import com.effective.android.anchors.task.listener.TaskListener
 import com.effective.android.anchors.task.lock.LockableAnchor
 
 class Datas {
+
+    fun startFromApplicationOnMainProcessByDsl_1(): AnchorsManager {
+        return AnchorsManager.getInstance()
+            .debuggable { true }
+            .taskFactory { TestTaskFactory() }
+            .anchors { arrayOf(TASK_93, "TASK_E", TASK_10, TASK_13) }
+            .block("TASK_10000") {
+
+                //根据业务进行  it.smash() or it.unlock()
+            }
+            .graphics {
+                UITHREAD_TASK_A.sons(
+                    TASK_10.sons(
+                        TASK_11.sons(
+                            TASK_12.sons(
+                                TASK_13
+                            )
+                        )
+                    ),
+                    TASK_20.sons(
+                        TASK_21.sons(
+                            TASK_22.sons(TASK_23)
+                        )
+                    ),
+                    TASK_30.sons(
+                        TASK_32.sons(
+                            TASK_32.sons(
+                                TASK_33
+                            )
+                        )
+                    ),
+                    TASK_40.sons(
+                        TASK_42.sons(
+                            TASK_42.sons(
+                                TASK_43
+                            )
+                        )
+                    ),
+                    TASK_50.sons(
+                        TASK_51,
+                        TASK_52.sons(TASK_53)
+                    ),
+                    TASK_60.sons(
+                        TASK_61,
+                        TASK_62.sons(TASK_63)
+                    ),
+                    TASK_70.sons(
+                        TASK_71,
+                        TASK_72.sons(TASK_73)
+                    ),
+                    TASK_80.sons(
+                        TASK_81,
+                        TASK_82.sons(TASK_83)
+                    ),
+                    TASK_90.sons(
+                        TASK_91,
+                        TASK_92.sons(TASK_93)
+                    ),
+                    UITHREAD_TASK_B,
+                    UITHREAD_TASK_C
+                )
+                arrayOf(UITHREAD_TASK_A)
+            }
+            .startUp(false)
+    }
+
     /**
      * 可通过DEPENDENCE_DETAIL 查看到有一下任务链
      * 2020-09-15 14:58:06.010 13902-13902/com.effective.android.sample D/DEPENDENCE_DETAIL: UITHREAD_TASK_A --> TASK_10 --> TASK_11 --> TASK_12 --> TASK_13
@@ -43,8 +109,8 @@ class Datas {
      * 2019-12-11 14:05:46.086 32459-32459/com.effective.android.sample D/ANCHOR_DETAIL: All anchors were released！
      * 2019-12-11 14:05:46.087 32459-32459/com.effective.android.sample D/SampleApplication: onCreate - end
      */
-    fun startFromApplicationOnMainProcessByDsl() {
-        AnchorsManager.getInstance()
+    fun startFromApplicationOnMainProcessByDsl(): AnchorsManager {
+        return AnchorsManager.getInstance()
             .debuggable { true }
             .taskFactory { TestTaskFactory() }
             .anchors { arrayOf(TASK_93, "TASK_E", TASK_10) }
@@ -108,8 +174,8 @@ class Datas {
             .startUp()
     }
 
-    fun startFromApplicationOnPrivateProcess() {
-        AnchorsManager.getInstance()
+    fun startFromApplicationOnPrivateProcess(): AnchorsManager  {
+        return AnchorsManager.getInstance()
             .debuggable { true }
             .taskFactory { TestTaskFactory() }
             .anchors { arrayOf(TASK_82) }
@@ -126,8 +192,8 @@ class Datas {
             .startUp()
     }
 
-    fun startFromApplicationOnPublicProcess() {
-        AnchorsManager.getInstance()
+    fun startFromApplicationOnPublicProcess(): AnchorsManager  {
+        return AnchorsManager.getInstance()
             .debuggable { true }
             .taskFactory { TestTaskFactory() }
             .anchors { arrayOf(TASK_93) }

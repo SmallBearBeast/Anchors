@@ -1,53 +1,68 @@
 package com.effective.android.anchors.task
 
-import android.os.Build
-import android.os.Trace
 import android.text.TextUtils
-import com.effective.android.anchors.*
-import com.effective.android.anchors.util.Utils.compareTask
+import com.effective.android.anchors.AnchorsRuntime
 import com.effective.android.anchors.log.LogTaskListener
 import com.effective.android.anchors.task.listener.TaskListener
 import com.effective.android.anchors.task.listener.TaskListenerBuilder
 import com.effective.android.anchors.task.lock.LockableTask
 import com.effective.android.anchors.task.project.Project
-import java.util.*
+import com.effective.android.anchors.util.Utils.compareTask
+import java.util.Arrays
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
 
-/**
- * created by yummylau on 2019/03/11
- */
-abstract class Task @JvmOverloads constructor(//mId,唯一存在
-    val id: String, //是否是异步存在
+abstract class Task @JvmOverloads constructor(
+    // id,唯一存在
+    val id: String,
+    // 是否是异步存在
     val isAsyncTask: Boolean = false
 ) : Runnable, Comparable<Task> {
 
+    companion object {
+        const val DEFAULT_PRIORITY = 0
+    }
+
     @TaskState
-    var state: Int
+    var state = TaskState.IDLE
         protected set
-    var priority //优先级，数值越低，优先级越低
-            : Int
+
+    // 优先级，数值越低，优先级越低
+    var priority = DEFAULT_PRIORITY
+
     var executeTime: Long = 0
         protected set
-    val behindTasks = CopyOnWriteArrayList<Task>() //被依赖者
-    val dependTasks = CopyOnWriteArraySet<Task>() //依赖者
-    private val taskListeners: MutableList<TaskListener> = ArrayList() //监听器
-    private var logTaskListeners: TaskListener? = LogTaskListener()
+
+    // 被依赖者
+    val behindTasks = CopyOnWriteArrayList<Task>()
+
+    // 依赖者
+    val dependTasks = CopyOnWriteArraySet<Task>()
+
+    // 监听器
+    private val taskListeners = ArrayList<TaskListener>()
+
+    private val logTaskListener by lazy {
+        LogTaskListener()
+    }
+
     internal lateinit var anchorsRuntime: AnchorsRuntime
 
-    internal fun bindRuntime(anchorsRuntime: AnchorsRuntime) {
-        this.anchorsRuntime = anchorsRuntime;
+    init {
+        require(!TextUtils.isEmpty(id)) { "task's mId can't be empty" }
+    }
+
+    internal fun bindRuntime(runtime: AnchorsRuntime) {
+        anchorsRuntime = runtime
     }
 
     fun addTaskListener(function: TaskListenerBuilder.() -> Unit) {
         taskListeners.add(TaskListenerBuilder().also(function))
     }
 
-    fun addTaskListener(taskListener: TaskListener?) {
-        taskListener?.let {
-            if (!taskListeners.contains(it)) {
-                taskListeners.add(it)
-            }
+    fun addTaskListener(listener: TaskListener) {
+        if (!taskListeners.contains(listener)) {
+            taskListeners.add(listener)
         }
     }
 
@@ -62,9 +77,6 @@ abstract class Task @JvmOverloads constructor(//mId,唯一存在
     }
 
     override fun run() {
-        if (anchorsRuntime.debuggable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            Trace.beginSection(id)
-        }
         toRunning()
         run(id)
         toFinish()
@@ -72,9 +84,6 @@ abstract class Task @JvmOverloads constructor(//mId,唯一存在
         tryCutoutBehind(behindTaskIds)
         notifyBehindTasks()
         release()
-        if (anchorsRuntime.debuggable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            Trace.endSection()
-        }
     }
 
     protected abstract fun run(name: String)
@@ -83,34 +92,34 @@ abstract class Task @JvmOverloads constructor(//mId,唯一存在
         return behindTaskIds
     }
 
-    fun toStart() {
+    private fun toStart() {
         state = TaskState.START
         anchorsRuntime.setStateInfo(this)
         if (anchorsRuntime.debuggable) {
-            logTaskListeners!!.onStart(this)
+            logTaskListener.onStart(this)
         }
         for (listener in taskListeners) {
             listener.onStart(this)
         }
     }
 
-    fun toRunning() {
+    private fun toRunning() {
         state = TaskState.RUNNING
         anchorsRuntime.setStateInfo(this)
         anchorsRuntime.setThreadName(this, Thread.currentThread().name)
         if (anchorsRuntime.debuggable) {
-            logTaskListeners!!.onRunning(this)
+            logTaskListener.onRunning(this)
         }
         for (listener in taskListeners) {
             listener.onRunning(this)
         }
     }
 
-    fun toFinish() {
+    private fun toFinish() {
         state = TaskState.FINISHED
         anchorsRuntime.setStateInfo(this)
         if (anchorsRuntime.debuggable) {
-            logTaskListeners!!.onFinish(this)
+            logTaskListener.onFinish(this)
         }
         for (listener in taskListeners) {
             listener.onFinish(this)
@@ -273,22 +282,11 @@ abstract class Task @JvmOverloads constructor(//mId,唯一存在
         dependTasks.clear()
         behindTasks.clear()
         if (anchorsRuntime.debuggable) {
-            logTaskListeners?.onRelease(this)
-            logTaskListeners = null
+            logTaskListener.onRelease(this)
         }
         for (listener in taskListeners) {
             listener.onRelease(this)
         }
         taskListeners.clear()
-    }
-
-    companion object {
-        const val DEFAULT_PRIORITY = 0
-    }
-
-    init {
-        priority = DEFAULT_PRIORITY
-        require(!TextUtils.isEmpty(id)) { "task's mId can't be empty" }
-        state = TaskState.IDLE
     }
 }

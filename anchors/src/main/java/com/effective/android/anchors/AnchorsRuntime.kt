@@ -5,12 +5,11 @@ import android.os.Looper
 import android.text.TextUtils
 import com.effective.android.anchors.log.Logger.d
 import com.effective.android.anchors.log.Logger.w
-import com.effective.android.anchors.util.Utils.compareTask
 import com.effective.android.anchors.task.Task
 import com.effective.android.anchors.task.TaskRuntimeInfo
-import java.util.*
-import java.util.concurrent.*
-import kotlin.concurrent.thread
+import com.effective.android.anchors.util.Utils.compareTask
+import java.util.Collections
+import java.util.concurrent.ExecutorService
 
 /**
  * Anchors 框架 runtime 信息管理
@@ -106,20 +105,26 @@ class AnchorsRuntime {
                     obj3.wait()
                 }
             }
-            while (runBlockTask.isNotEmpty()) {
-                synchronized(obj) {
-                    if (runBlockTask.isNotEmpty()) {
-                        Collections.sort(runBlockTask, taskComparator)
-                        runBlockTask.removeAt(0)?.let {
-                            if (hasAnchorTasks()) {
-                                it.run()
-                            } else {
-                                handler.post(it)
-                                for (blockItem in runBlockTask) {
-                                    handler.post(blockItem)
-                                }
-                                runBlockTask.clear()
+            doRunBlockTask()
+        }
+        // 如果锚点任务在调用tryRunBlockTask之前执行完，需要重新检测运行runBlockTask是否存在任务没完成
+        doRunBlockTask()
+    }
+
+    private fun doRunBlockTask() {
+        while (runBlockTask.isNotEmpty()) {
+            synchronized(obj) {
+                if (runBlockTask.isNotEmpty()) {
+                    Collections.sort(runBlockTask, taskComparator)
+                    runBlockTask.removeAt(0).let {
+                        if (hasAnchorTasks()) {
+                            it.run()
+                        } else {
+                            handler.post(it)
+                            for (blockItem in runBlockTask) {
+                                handler.post(blockItem)
                             }
+                            runBlockTask.clear()
                         }
                     }
                 }
@@ -151,10 +156,17 @@ class AnchorsRuntime {
         if (task.isAsyncTask) {
             pool.getExecutorService().execute(task)
         } else {
-            if (!hasAnchorTasks()) {
-                handler.post(task)
+            // 主线程直接运行
+            if (Looper.getMainLooper() == Looper.myLooper()) {
+                task.run()
             } else {
-                addRunTasks(task)
+                // 如果有锚点任务还未执行完毕，且当前在子线程，不能post到主线程执行，可能会造成死锁，需要添加到列表里等主线程获取时间片轮训执行。
+                // 如果锚点任务已经执行完毕，则直接post到主线程执行
+                if (!hasAnchorTasks()) {
+                    handler.post(task)
+                } else {
+                    addRunTasks(task)
+                }
             }
         }
     }

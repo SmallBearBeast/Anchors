@@ -3,7 +3,7 @@ package com.effective.android.anchors.util
 import android.os.Looper
 import com.effective.android.anchors.task.Task
 
-object Utils {
+internal object Utils {
 
     @JvmStatic
     fun insertAfterTask(insert: Task, targetTask: Task) {

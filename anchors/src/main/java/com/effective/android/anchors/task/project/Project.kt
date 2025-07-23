@@ -4,7 +4,6 @@ import com.effective.android.anchors.task.Task
 import com.effective.android.anchors.task.TaskCreator
 import com.effective.android.anchors.task.TaskCreatorBuilder
 
-
 class Project private constructor(id: String) : Task(id) {
     lateinit var endTask: Task
     lateinit var startTask: Task
@@ -50,8 +49,9 @@ class Project private constructor(id: String) : Task(id) {
         private val mStartTask: Task
         private var mCurrentTaskShouldDependOnStartTask = false
         private val mProject: Project = Project(projectName)
-        private var mPriority //默认project优先级为project内所有task的优先级，如果没有设置则取 max(project内所有task的)
-                = 0
+
+        // 默认project优先级为project内所有task的优先级，如果没有设置则取 max(project内所有task的)
+        private var mPriority = 0
 
         fun build(): Project {
             if (mCurrentAddTask != null) {

@@ -1,32 +1,25 @@
 package com.effective.android.anchors
 
-import android.support.annotation.MainThread
-import com.effective.android.anchors.log.Logger.d
-import com.effective.android.anchors.util.Utils.assertMainThread
-import com.effective.android.anchors.util.Utils.insertAfterTask
+import androidx.annotation.MainThread
 import com.effective.android.anchors.log.Logger
-import com.effective.android.anchors.task.lock.LockableTask
-import com.effective.android.anchors.task.project.Project
+import com.effective.android.anchors.log.Logger.d
 import com.effective.android.anchors.task.Task
 import com.effective.android.anchors.task.lock.LockableAnchor
-import java.util.*
+import com.effective.android.anchors.task.lock.LockableTask
+import com.effective.android.anchors.task.project.Project
+import com.effective.android.anchors.util.Utils.assertMainThread
+import com.effective.android.anchors.util.Utils.insertAfterTask
 import java.util.concurrent.ExecutorService
-import kotlin.collections.HashMap
 
 /**
  * updated by yummylau on 2020/01/09 调整为非单例，支持扩展到任何场景
  */
-class AnchorsManager {
+class AnchorsManager private constructor(executor: ExecutorService? = null) {
 
     var debuggable = false
     private var anchorTaskIds: MutableSet<String> = HashSet()
     private var blockAnchors = HashMap<String, LockableAnchor?>()
-    private var currentBlockAnchor: LockableAnchor? = null
-    private val anchorsRuntime: AnchorsRuntime
-
-    private constructor(executor: ExecutorService? = null) {
-        this.anchorsRuntime = AnchorsRuntime(executor)
-    }
+    private val anchorsRuntime = AnchorsRuntime(executor)
 
     companion object {
         @JvmStatic
@@ -71,7 +64,7 @@ class AnchorsManager {
         return lockableAnchor
     }
 
-    //用于兼容旧版本java
+    // 用于兼容旧版本java
     fun addAnchors(vararg taskIds: String): AnchorsManager {
         if (taskIds.isNotEmpty()) {
             for (id in taskIds) {
@@ -94,8 +87,9 @@ class AnchorsManager {
         return this
     }
 
+    @JvmOverloads
     @MainThread
-    fun start(task: Task?) {
+    fun start(task: Task?, autoBlock: Boolean = true) {
         assertMainThread()
         if (task == null) {
             throw RuntimeException("can no run a task that was null !")
@@ -108,15 +102,23 @@ class AnchorsManager {
         anchorsRuntime.traversalDependenciesAndInit(startTask)
         val logEnd = logStartWithAnchorsInfo()
         startTask.start()
-        anchorsRuntime.tryRunBlockTask()
+        // 默认会在start方法中调用waitAnchorTaskFinished方法，等待锚点任务执行完成
+        // 如果autoBlock为false，则需要手动调用waitAnchorTaskFinished等待锚点任务执行完成
+        if (autoBlock) {
+            waitAnchorTaskFinished()
+        }
         if (logEnd) {
             logEndWithAnchorsInfo()
         }
     }
 
+    fun waitAnchorTaskFinished() {
+        anchorsRuntime.tryRunBlockTask()
+    }
+
     private fun syncConfigInfoToRuntime() {
         anchorsRuntime.clear()
-        anchorsRuntime.debuggable = debuggable;
+        anchorsRuntime.debuggable = debuggable
         anchorsRuntime.addAnchorTasks(anchorTaskIds)
         anchorTaskIds.clear()
     }
@@ -207,7 +209,7 @@ fun AnchorsManager.graphics(graphics: () -> Array<String>): AnchorsManager {
 }
 
 
-fun AnchorsManager.startUp(): AnchorsManager {
+fun AnchorsManager.startUp(autoBlock: Boolean = true): AnchorsManager {
 
     debuggable = AnchorsManagerBuilder.debuggable
 
@@ -271,12 +273,12 @@ fun AnchorsManager.startUp(): AnchorsManager {
     }
 
     if (validSon.size == 1) {
-        start(validSon[0])
+        start(validSon[0], autoBlock)
     } else {
         for (task in validSon) {
             setUp.behind(task)
         }
-        start(setUp)
+        start(setUp, autoBlock)
     }
     AnchorsManagerBuilder.setUp()
     return this

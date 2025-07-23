@@ -21,17 +21,17 @@ internal object Logger {
     }
 
     @JvmStatic
-    fun e(tag: String?, obj: Any) {
+    fun e(tag: String, obj: Any) {
         Log.e(tag, obj.toString())
     }
 
     @JvmStatic
-    fun w(tag: String?, obj: Any) {
+    fun w(tag: String, obj: Any) {
         Log.w(tag, obj.toString())
     }
 
     @JvmStatic
-    fun d(tag: String?, obj: Any) {
+    fun d(tag: String, obj: Any) {
         Log.d(tag, obj.toString())
     }
 }
