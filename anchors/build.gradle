@@ -24,19 +24,22 @@ task generateSourcesJar(type: Jar) {
     classifier 'sources'
 }
 
-def versionName = "1.1.4"
+def versionName = "1.1.9-SNAPSHOT"
 
 // Because the components are created only during the afterEvaluate phase, you must
 // configure your publications using the afterEvaluate() lifecycle method.
 afterEvaluate {
     publishing {
+//        repositories {
+//            maven { url uri('../repo') }
+//        }
         publications {
-            Production(MavenPublication) {
+            release(MavenPublication) {
                 // Creates a Maven publication called "release".
                 // Applies the component for the release build variant.
                 from components.release
                 // You can then customize attributes of the publication as shown below.
-                groupId = 'com.github.Yummylau'
+                groupId = 'com.github.bear'
                 artifactId = 'Anchors'
                 version = versionName
                 // 上传source，这样使用放可以看到方法注释

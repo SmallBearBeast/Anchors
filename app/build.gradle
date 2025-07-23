@@ -20,8 +20,8 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:2.10'
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:2.10'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation project(':anchors')
 //    implementation 'com.github.DSAppTeam:Anchors:v1.1.7'
