@@ -1,0 +1,65 @@
+// buildSrc 的执行时机不仅早于任何⼀个 project（build.gradle），而且也早于 settings.gradle。
+// 且没有添加在settings.gradle，因此需要单独引入buildscript 插件相关配置，和依赖仓库相关配置。
+buildscript {
+    ext.kotlin_version = '1.7.10'
+    ext.build_version = '7.3.0'
+    ext.aaaa = '1.7.10'
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:$build_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+// 还有一个更短的别名kotlin，因此和apply plugin: 'kotlin'是等效的。
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'java-gradle-plugin'
+// 不要使用plugins方式引入，会失败
+//plugins {
+//    id 'org.jetbrains.kotlin.jvm'
+//    id 'java-gradle-plugin'
+//}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    // 引入Gradle相关Api
+    implementation gradleApi()
+    implementation "com.android.tools.build:gradle:$build_version"
+    // 引入kotlin标准库
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.android.tools:common:30.1.0'
+
+    // 引入asm相关依赖
+    implementation 'org.ow2.asm:asm:9.1'
+    implementation 'org.ow2.asm:asm-util:9.1'
+    implementation 'org.ow2.asm:asm-commons:9.1'
+}
+
+
+
+//2、进行插件注册相关的配置
+gradlePlugin {
+    plugins {
+        greeting {
+            // 插件id
+            id = 'BuildSrcPlugin'
+            // 插件实现类
+            implementationClass = 'com.bear.buildsrc.BuildSrcPlugin'
+        }
+    }
+}
