@@ -36,14 +36,17 @@ dependencies {
     implementation 'org.ow2.asm:asm-commons:9.1'
 }
 
-// 配置 Gradle 插件
+// 配置 Gradle 插件但不自动发布
 gradlePlugin {
     plugins {
         transformPlugin {
             id = 'com.bear.anchor.transformplugin'
             implementationClass = 'com.bear.anchor.plugin.TransformPlugin'
+            group = 'com.bear.anchor'  // 添加这行
         }
     }
+    // 禁用自动发布插件到 Gradle Plugin Portal
+    automatedPublishing = false
 }
 
 // 创建源码 jar 任务
