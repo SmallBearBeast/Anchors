@@ -1,8 +1,7 @@
-package com.bear.buildsrc
+package com.bear.anchor.plugin
 
 import com.android.build.gradle.AppExtension
-import com.bear.buildsrc.transform.CustomTransform
-import com.bear.buildsrc.transform.TaskRegisterTransform
+import com.bear.anchor.plugin.transform.TaskRegisterTransform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

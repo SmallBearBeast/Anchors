@@ -12,64 +12,60 @@ class Datas {
             .debuggable { true }
             .taskFactory { TestTaskFactory() }
             .anchors { arrayOf(TASK_93, "TASK_E", TASK_10, TASK_13) }
-            .block("TASK_10000") {
-
-                //根据业务进行  it.smash() or it.unlock()
-            }
             .graphics {
-                UITHREAD_TASK_A.sons(
-                    TASK_10.sons(
-                        TASK_11.sons(
-                            TASK_12.sons(
-                                TASK_13
-                            )
-                        )
-                    ),
-                    TASK_20.sons(
-                        TASK_21.sons(
-                            TASK_22.sons(TASK_23)
-                        )
-                    ),
-                    TASK_30.sons(
-                        TASK_32.sons(
-                            TASK_32.sons(
-                                TASK_33
-                            )
-                        )
-                    ),
-                    TASK_40.sons(
-                        TASK_42.sons(
-                            TASK_42.sons(
-                                TASK_43
-                            )
-                        )
-                    ),
-                    TASK_50.sons(
-                        TASK_51,
-                        TASK_52.sons(TASK_53)
-                    ),
-                    TASK_60.sons(
-                        TASK_61,
-                        TASK_62.sons(TASK_63)
-                    ),
-                    TASK_70.sons(
-                        TASK_71,
-                        TASK_72.sons(TASK_73)
-                    ),
-                    TASK_80.sons(
-                        TASK_81,
-                        TASK_82.sons(TASK_83)
-                    ),
-                    TASK_90.sons(
-                        TASK_91,
-                        TASK_92.sons(TASK_93)
-                    ),
-                    UITHREAD_TASK_B,
-                    UITHREAD_TASK_C
-                )
+//                UITHREAD_TASK_A.sons(
+//                    TASK_10.sons(
+//                        TASK_11.sons(
+//                            TASK_12.sons(
+//                                TASK_13
+//                            )
+//                        )
+//                    ),
+//                    TASK_20.sons(
+//                        TASK_21.sons(
+//                            TASK_22.sons(TASK_23)
+//                        )
+//                    ),
+//                    TASK_30.sons(
+//                        TASK_32.sons(
+//                            TASK_32.sons(
+//                                TASK_33
+//                            )
+//                        )
+//                    ),
+//                    TASK_40.sons(
+//                        TASK_42.sons(
+//                            TASK_42.sons(
+//                                TASK_43
+//                            )
+//                        )
+//                    ),
+//                    TASK_50.sons(
+//                        TASK_51,
+//                        TASK_52.sons(TASK_53)
+//                    ),
+//                    TASK_60.sons(
+//                        TASK_61,
+//                        TASK_62.sons(TASK_63)
+//                    ),
+//                    TASK_70.sons(
+//                        TASK_71,
+//                        TASK_72.sons(TASK_73)
+//                    ),
+//                    TASK_80.sons(
+//                        TASK_81,
+//                        TASK_82.sons(TASK_83)
+//                    ),
+//                    TASK_90.sons(
+//                        TASK_91,
+//                        TASK_92.sons(TASK_93)
+//                    ),
+//                    UITHREAD_TASK_B,
+//                    UITHREAD_TASK_C
+//                )
                 arrayOf(UITHREAD_TASK_A)
             }
-            .startUp(false)
+            .startUp(autoBlock = false, autoRegister = true)
     }
 
     /**

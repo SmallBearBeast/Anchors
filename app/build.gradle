@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.example.transformplugin'
+//apply plugin: 'com.example.transformplugin'
 apply plugin: 'BuildSrcPlugin'
-//apply plugin: 'TransformPlugin'
+apply plugin: 'kotlin-kapt'
+//apply plugin: 'com.bear.anchor.transformplugin'
 
 android {
     buildToolsVersion "30.0.3"
@@ -27,5 +28,10 @@ dependencies {
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation project(':anchors')
-//    implementation 'com.github.DSAppTeam:Anchors:v1.1.7'
+    implementation project(':anchor-annotation')
+    kapt project(':anchor-compiler')
+
+//    implementation 'com.bear.anchor:anchors:1.1.9-SNAPSHOT'
+//    implementation 'com.bear.anchor:annotation:1.0.0'
+//    kapt "com.bear.anchor:compiler:1.0.0"
 }

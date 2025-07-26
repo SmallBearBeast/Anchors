@@ -1,2 +1,5 @@
 include ':app'
 include ':anchors'
+include ':anchor-annotation'
+include ':anchor-compiler'
+include ':anchor-plugin'

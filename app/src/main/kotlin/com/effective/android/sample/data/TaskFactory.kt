@@ -1,5 +1,6 @@
 package com.effective.android.sample.data
 
+import com.bear.annotation.TaskConfig
 import com.effective.android.anchors.task.project.Project.TaskFactory
 import com.effective.android.anchors.task.Task
 import com.effective.android.anchors.task.TaskCreator
@@ -286,48 +287,56 @@ class CUTOUT_TASK_1 : TestTask(Datas.CUTOUT_TASK_1, true) {
 
 }
 
+@TaskConfig(name = Datas.UITHREAD_TASK_A, priority = 1, description = "UI线程任务A")
 class UITHREAD_TASK_A : TestTask(Datas.UITHREAD_TASK_A) {
     override fun run(name: String) {
         doJob(200)
     }
 }
 
+@TaskConfig(name = Datas.UITHREAD_TASK_B, dependencies = [Datas.UITHREAD_TASK_A], priority = 1, description = "UI线程任务B")
 class UITHREAD_TASK_B : TestTask(Datas.UITHREAD_TASK_B) {
     override fun run(name: String) {
         doJob(200)
     }
 }
 
+@TaskConfig(name = Datas.UITHREAD_TASK_C, dependencies = [Datas.UITHREAD_TASK_A], priority = 1, description = "UI线程任务C")
 class UITHREAD_TASK_C : TestTask(Datas.UITHREAD_TASK_C) {
     override fun run(name: String) {
         doJob(200)
     }
 }
 
+@TaskConfig(name = Datas.ASYNC_TASK_1, dependencies = [Datas.UITHREAD_TASK_B], priority = 1, description = "子线程任务1")
 class ASYNC_TASK_1 : TestTask(Datas.ASYNC_TASK_1, true) {
     override fun run(name: String) {
         doJob(200)
     }
 }
 
+@TaskConfig(name = Datas.ASYNC_TASK_2, dependencies = [Datas.UITHREAD_TASK_B], priority = 1, description = "子线程任务2")
 class ASYNC_TASK_2 : TestTask(Datas.ASYNC_TASK_2, true) {
     override fun run(name: String) {
         doJob(200)
     }
 }
 
+@TaskConfig(name = Datas.ASYNC_TASK_3, dependencies = [Datas.UITHREAD_TASK_C], priority = 1, description = "子线程任务3")
 class ASYNC_TASK_3 : TestTask(Datas.ASYNC_TASK_3, true) {
     override fun run(name: String) {
         doJob(200)
     }
 }
 
+@TaskConfig(name = Datas.ASYNC_TASK_4, dependencies = [Datas.UITHREAD_TASK_C], priority = 1, description = "子线程任务4")
 class ASYNC_TASK_4 : TestTask(Datas.ASYNC_TASK_4, true) {
     override fun run(name: String) {
         doJob(200)
     }
 }
 
+@TaskConfig(name = Datas.ASYNC_TASK_5, dependencies = [Datas.UITHREAD_TASK_C], priority = 1, description = "子线程任务5")
 class ASYNC_TASK_5 : TestTask(Datas.ASYNC_TASK_5, true) {
     override fun run(name: String) {
         doJob(200)

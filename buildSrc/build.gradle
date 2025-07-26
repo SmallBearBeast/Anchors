@@ -3,7 +3,6 @@
 buildscript {
     ext.kotlin_version = '1.7.10'
     ext.build_version = '7.3.0'
-    ext.aaaa = '1.7.10'
 
     repositories {
         google()
@@ -49,8 +48,6 @@ dependencies {
     implementation 'org.ow2.asm:asm-util:9.1'
     implementation 'org.ow2.asm:asm-commons:9.1'
 }
-
-
 
 //2、进行插件注册相关的配置
 gradlePlugin {

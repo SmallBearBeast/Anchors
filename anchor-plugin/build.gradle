@@ -1,0 +1,71 @@
+buildscript {
+    ext.kotlin_version = '1.7.10'
+    ext.build_version = '7.3.0'
+}
+
+// 需要放在buildscript下面
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    // 引入Gradle相关Api
+    implementation gradleApi()
+    implementation "com.android.tools.build:gradle:$build_version"
+    // 引入kotlin标准库
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.android.tools:common:30.1.0'
+
+    // 引入asm相关依赖
+    implementation 'org.ow2.asm:asm:9.1'
+    implementation 'org.ow2.asm:asm-util:9.1'
+    implementation 'org.ow2.asm:asm-commons:9.1'
+}
+
+// 配置 Gradle 插件
+gradlePlugin {
+    plugins {
+        transformPlugin {
+            id = 'com.bear.anchor.transformplugin'
+            implementationClass = 'com.bear.anchor.plugin.TransformPlugin'
+        }
+    }
+}
+
+// 创建源码 jar 任务
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier = 'sources'
+}
+
+//配置发布本地 maven
+afterEvaluate {
+    publishing {
+        repositories {
+            maven { url uri("${rootProject.projectDir}/repo") }
+        }
+        publications {
+            release(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                groupId 'com.bear.anchor'
+                artifactId 'plugin'
+                version '1.0.0'
+            }
+        }
+    }
+}

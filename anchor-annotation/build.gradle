@@ -1,0 +1,34 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'maven-publish'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// 创建源码 jar 任务
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier = 'sources'
+}
+
+//配置发布本地 maven
+afterEvaluate {
+    publishing {
+        repositories {
+            maven { url uri("${rootProject.projectDir}/repo") }
+        }
+        publications {
+            release(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                groupId 'com.bear.anchor'
+                artifactId 'annotation'
+                version '1.0.0'
+            }
+        }
+    }
+}

@@ -3,6 +3,7 @@ package com.effective.android.anchors
 import androidx.annotation.MainThread
 import com.effective.android.anchors.log.Logger
 import com.effective.android.anchors.log.Logger.d
+import com.effective.android.anchors.register.TaskRegister
 import com.effective.android.anchors.task.Task
 import com.effective.android.anchors.task.lock.LockableAnchor
 import com.effective.android.anchors.task.lock.LockableTask
@@ -208,8 +209,7 @@ fun AnchorsManager.graphics(graphics: () -> Array<String>): AnchorsManager {
     return this
 }
 
-
-fun AnchorsManager.startUp(autoBlock: Boolean = true): AnchorsManager {
+fun AnchorsManager.startUp(autoBlock: Boolean = true, autoRegister: Boolean = false): AnchorsManager {
 
     debuggable = AnchorsManagerBuilder.debuggable
 
@@ -218,7 +218,9 @@ fun AnchorsManager.startUp(autoBlock: Boolean = true): AnchorsManager {
             addAnchor(taskId)
         }
     }
-
+    if (autoRegister) {
+        TaskRegister.register()
+    }
     requireNotNull(AnchorsManagerBuilder.factory) { "kotlin dsl-build should set TaskFactory with invoking AnchorsManager#taskFactory()" }
 
     requireNotNull(AnchorsManagerBuilder.sons) { "kotlin dsl-build should set graphics with invoking AnchorsManager#graphics()" }
